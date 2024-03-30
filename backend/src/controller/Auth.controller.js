@@ -7,7 +7,7 @@ const UserModel = require('../model/User.model');
 const JWT_SECRET = process.env.JWT_SECRET_BACKEND;
 
 exports.register = async (req, res) => {
-    const {email, password} = req.body;
+    const {email, fullname, password} = req.body;
 
     if (!validator.isEmail(email)) {
         return res.status(400).send({message: 'Invalid email address'});
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        UserModel.createUser(email, hashedPassword, async (err) => {
+        UserModel.createUser(email, fullname, hashedPassword, async (err) => {
             const newUser   = await UserModel.getUserByEmail(email);
             const token     = jwt.sign(
                 { userId: newUser.id }, 
