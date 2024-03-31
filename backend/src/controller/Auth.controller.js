@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
         const newUser = await modelUser.createUser(email, fullname, hashedPassword);;
         
         const token = jwt.sign(
-            { userId: newUser.lastID },
+            { user_id: newUser.lastID },
             JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -60,10 +60,12 @@ exports.login = async (req, res) => {
         const match = await bcrypt.compare(password, foundUser.password);
         if (match) {
             const token = jwt.sign(
-                { userId: foundUser.id },
+                { user_id: foundUser.id },
                 JWT_SECRET,
                 { expiresIn: '1h' }
             );
+
+            await modelUser.updateAccessTokenById(foundUser.id, token);
 
             return httpResponses.sendSuccess(res, { accesToken: { token, expiresIn: 3600 } });
         } else {
@@ -73,4 +75,15 @@ exports.login = async (req, res) => {
         console.error('Error:', error);
         return httpResponses.sendError(res, 500);
     }
+};
+
+exports.logout = async (req, res) => {
+    try {
+        await modelUser.updateAccessTokenById(req.user.user_id, null);
+        return httpResponses.sendSuccess(res, { message: 'OK' });
+    } catch (error) {
+        console.error('Error:', error);
+        return httpResponses.sendError(res, 500);
+    }
+
 };

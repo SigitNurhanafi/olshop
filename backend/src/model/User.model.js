@@ -73,6 +73,24 @@ class User {
         });
     }
 
+    static getAccessTokenByUserId(id) {
+        return new Promise((resolve, reject) => { 
+            db.get(`SELECT 
+                    id, access_token
+                FROM 
+                    users 
+                WHERE 
+                    id = ?`,
+            [id], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
+    }
+
     static updateAccessTokenById(id, access_token) {
         return new Promise((resolve, reject) => {
             db.run(`
