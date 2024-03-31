@@ -1,3 +1,4 @@
+const validator     = require('validator');
 const modelProduct  = require('../model/Product.model');
 const httpResponses = require('../utils/responses');
 
@@ -30,24 +31,24 @@ exports.getProductById = async (req, res) => {
 exports.addProduct = async (req, res) => {
     let { name, price, description, category, sku } = req.body;
 
-    if (!name || typeof name !== 'string') {
+    if (!validator.isString(name)) {
         return httpResponses.sendError(res, 400, 'Name must be string');
     }
 
     price = parseFloat(price);
-    if (!price || typeof price !== 'number') {
+    if (!validator.isFloat(String(price), { min: 0 })) {
         return httpResponses.sendError(res, 400, 'Price must be float string');
     }
 
-    if (!description || typeof description !== 'string') {
-        return httpResponses.sendError(res, 400, 'Deskripsi must be string');
+    if (!validator.isString(description)) {
+        return httpResponses.sendError(res, 400, 'Description must be string');
     }
 
-    if (!sku || typeof sku !== 'string') {
+    if (!validator.isString(sku)) {
         return httpResponses.sendError(res, 400, 'SKU must be string');
     }
 
-    if (!sku || typeof category !== 'string') {
+    if (!validator.isString(category)) {
         return httpResponses.sendError(res, 400, 'Category must be string');
     }
 
@@ -78,25 +79,25 @@ exports.updateProduct = async (req, res) => {
         return httpResponses.sendError(res, 404, 'Product not found');
     }
 
-    if (!name || typeof name !== 'string') {
+    if (!validator.isString(name)) {
         return httpResponses.sendError(res, 400, 'Name must be string');
     }
 
     price = parseFloat(price);
-    if (!price || typeof price !== 'number') {
+    if (!validator.isFloat(String(price), { min: 0 })) {
         return httpResponses.sendError(res, 400, 'Price must be float string');
     }
 
-    if (!description || typeof description !== 'string') {
-        return httpResponses.sendError(res, 400, 'Deskripsi must be string');
+    if (!validator.isString(description)) {
+        return httpResponses.sendError(res, 400, 'Description must be string');
     }
 
-    if (!sku || typeof sku !== 'string') {
-        return httpResponses.sendError(res, 400, 'SKU must be string');
-    }
-
-    if (!sku || typeof category !== 'string') {
+    if (!validator.isString(category)) {
         return httpResponses.sendError(res, 400, 'Category must be string');
+    }
+
+    if (!validator.isString(sku)) {
+        return httpResponses.sendError(res, 400, 'SKU must be string');
     }
 
     try {

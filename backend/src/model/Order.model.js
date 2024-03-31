@@ -15,7 +15,7 @@ db.run(`
 
 // Buat model Order
 class Order {
-    static createOrder(productId, status, callback) {
+    static createOrder(productId, status) {
         return new Promise((resolve, reject) => {
             db.run(`INSERT INTO 
                 orders 
@@ -36,7 +36,7 @@ class Order {
     static getOrderById(id) {
         return new Promise((resolve, reject) => { 
             db.get(`SELECT 
-                    id, product_id, status 
+                    *
                 FROM 
                     orders 
                 WHERE 
@@ -53,7 +53,7 @@ class Order {
 
     static getOrderByStatus(status) {
         return new Promise((resolve, reject) => { 
-            db.all(`SELECT 
+            db.run(`SELECT 
                     id, product_id, status 
                 FROM 
                     orders 
@@ -69,15 +69,85 @@ class Order {
         });
     }
 
-    static updateOrder(id) {
+    static updateOrder(id, status) {
         return new Promise((resolve, reject) => { 
-            db.all(`SELECT 
-                    id, product_id, status 
+        db.run(`
+            UPDATE 
+                orders
+            SET 
+                status = ?,
+                updated_at = ?
+            WHERE 
+                id = ?`,
+            [status, id], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    static getAllOrdersWithProducts() {
+        return new Promise((resolve, reject) => {
+            db.all(`
+                SELECT 
+                    orders.id as order_id, 
+                    orders.status, 
+                    products.id as product_id, 
+                    products.name, 
+                    products.price
                 FROM 
-                    orders 
-                WHERE 
-                    status = ?`,
-            [status], (err, rows) => {
+                    orders
+                INNER 
+                    JOIN 
+                        products 
+                    ON 
+                        orders.product_id = products.id
+            `, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    };
+
+    static getAllOrdersWithProductId(id) {
+        return new Promise((resolve, reject) => {
+            db.all(`
+                SELECT 
+                    orders.id as id, 
+                    orders.status, 
+                    products.id as product_id, 
+                    products.name, 
+                    products.price,
+                    orders.created_at,
+                    orders.updated_at
+                FROM 
+                    orders
+                INNER 
+                    JOIN 
+                        products 
+                    ON 
+                        orders.product_id = products.id
+                WHERE orders.id = ?
+                LIMIT 1
+            `, [id], (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row[0]);
+                }
+            });
+        });
+    };
+
+    static getAllOrders() {
+        return new Promise((resolve, reject) => {
+            db.all(`SELECT * FROM orders`, (err, rows) => {
                 if (err) {
                     reject(err);
                 } else {
