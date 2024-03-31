@@ -1,6 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
-
-const db = new sqlite3.Database('database.db');
+const { timeStampCurentUTC } = require('../utils/timestamp');
+const sqlite3       = require('sqlite3').verbose();
+const db            = new sqlite3.Database('database.db');
 
 db.run(`CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,18 +68,6 @@ class Product {
     }
 
     static updateProduct(id, {name, price, description, category, sku}) {
-        const currentDate = new Date();
-
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-
-        const updated_at = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
         return new Promise((resolve, reject) => {
             db.run(`
                 UPDATE 
@@ -90,10 +78,10 @@ class Product {
                     description = ?,
                     category = ?,
                     sku = ?,
-                    updated_at = datetime(?, 'localtime')
+                    updated_at = ?
                 WHERE 
                     id = ?`,
-                [name, price, description, category, sku, updated_at, id], (err) => {
+                [name, price, description, category, sku, timeStampCurentUTC(), id], (err) => {
                     if (err) {
                         reject(err);
                     } else {

@@ -1,15 +1,16 @@
-const modelOrde = require('../model/Order.model');
+const modelOrder    = require('../model/Order.model');
+const httpResponses = require('../utils/responses');
 
 // Fungsi untuk membuat order baru
 exports.createOrder = async (req, res) => {
     const { productId, status } = req.body;
 
     try {
-        const orderId = await modelOrde.createOrder(productId, status);
-        return res.status(201).json({ message: 'Order created successfully', orderId });
+        const orderId = await modelOrder.createOrder(productId, status);
+        return httpResponses.sendSuccess(res, { id: orderId }, 201);
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return httpResponses.sendError(res, 500);
     }
 };
 
@@ -18,15 +19,15 @@ exports.getOrderById = async (req, res) => {
     const { orderId } = req.params;
 
     try {
-        const foundOrder = await modelOrde.getOrderById(orderId);
+        const foundOrder = await modelOrder.getOrderById(orderId);
         if (!foundOrder) {
-            return res.status(404).json({ message: 'Order not found' });
+            return httpResponses.sendError(res, 404, 'Order not found');
         }
 
-        return res.status(200).json(foundOrder);
+        return httpResponses.sendSuccess(res, foundOrder);
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return httpResponses.sendError(res, 500);
     }
 };
 
@@ -36,11 +37,16 @@ exports.updateOrder = async (req, res) => {
     const { productId, status } = req.body;
 
     try {
-        const updatedOrder = await modelOrde.updateOrder(orderId, { productId, status });
-        return res.status(200).json({ message: 'Order updated successfully', updatedOrder });
+        const updatedOrder = await modelOrder.updateOrder(orderId, { productId, status });
+        return httpResponses.sendSuccess(res, 
+            { 
+                message: 'Order updated successfully', 
+                updatedOrder 
+            }
+        );
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return httpResponses.sendError(res, 500);
     }
 };
 
@@ -49,10 +55,10 @@ exports.deleteOrder = async (req, res) => {
     const { orderId } = req.params;
 
     try {
-        await modelOrde.deleteOrder(orderId);
-        return res.status(200).json({ message: 'Order deleted successfully' });
+        await modelOrder.deleteOrder(orderId);
+        return httpResponses.sendSuccess(res, { message: 'Order deleted successfully' });
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json({ message: 'Internal Server Error' });
+        return httpResponses.sendError(res, 500);
     }
 };

@@ -1,18 +1,18 @@
-const UserModel = require('../model/User.model');
+const modelUser     = require('../model/User.model');
+const httpResponses = require('../utils/responses');
 
 exports.getUserById = async (req, res) => {
-    const {userId} = req.params;
+    const { userId } = req.params;
 
     try {
-        const foundUser = await UserModel.getUserById(userId);
+        const foundUser = await modelUser.getUserById(userId);
         if (!foundUser) {
-            return res.status(404).json({message: 'User not found'});
+            return httpResponses.sendError(res, 404, 'User not found');
         }
 
-        return res.status(200).json(foundUser);
+        return httpResponses.sendSuccess(res, foundUser);
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json({message: 'Internal Server Error'});
+        return httpResponses.sendError(res, 500);
     }
 };
-

@@ -4,7 +4,8 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('database.db');
 
 // Buat tabel "users" jika belum ada
-db.run(`CREATE TABLE IF NOT EXISTS users (
+db.run(`
+    CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fullname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
@@ -18,18 +19,22 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
 // Buat model User
 class User {
     static createUser(email, fullname, password, callback) {
-        db.run(`INSERT INTO 
+        return new Promise((resolve, reject) => { 
+            db.run(`INSERT INTO 
             users 
                 (email, fullname, password) 
             VALUES 
                 (?, ?, ?)`,
             [email, fullname, password], 
-        function (err) {            
-            if (err) {
-                return callback(err);
-            }
-            callback(null, this.lastID);
+            function (err) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(this);
+                }
+            });
         });
+       
     }
 
     static getUserByEmail(email) {
@@ -65,6 +70,25 @@ class User {
                     resolve(row);
                 }
             });
+        });
+    }
+
+    static updateAccessTokenById(id, access_token) {
+        return new Promise((resolve, reject) => {
+            db.run(`
+                UPDATE 
+                    users 
+                SET 
+                    access_token = ?
+                WHERE 
+                    id = ?`,
+                [access_token, id], (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
         });
     }
 }

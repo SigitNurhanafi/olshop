@@ -1,13 +1,18 @@
 
-function sendSuccessResponse(res, data) {
-    res.status(200).json(data);
+exports.sendSuccess = (res, data, statusCode = 200) => {
+    return res
+        .status(statusCode)
+        .json({
+            status: true,
+            ...data
+        });
 }
 
-function sendErrorResponse(res, statusCode, message) {
-    res.status(statusCode).json({ error: message });
+exports.sendError = (res, statusCode, message = 'Internal Server Error') => {
+    return res
+        .status(statusCode)
+        .json({ 
+            status: false, 
+            error: message 
+        });
 }
-
-module.exports = {
-    sendSuccessResponse,
-    sendErrorResponse
-};
