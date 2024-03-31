@@ -5,12 +5,14 @@ const db = new sqlite3.Database('database.db');
 
 // Buat tabel "users" jika belum ada
 db.run(`CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     fullname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
     reset_token DEFAULT NULL,
     access_token DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 )`);
 
 // Buat model User

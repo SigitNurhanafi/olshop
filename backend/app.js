@@ -1,7 +1,8 @@
-const express   = require('express');
-const authRoute = require('./src/route/Auth.route');
-const userRoute = require('./src/route/User.route');
-const app       = express();
+const express       = require('express');
+const authRoute     = require('./src/route/Auth.route');
+const userRoute     = require('./src/route/User.route');
+const productRoute  = require('./src/route/Product.route');
+const app           = express();
 
 app.use(express.json());
 app.disable('x-powered-by');
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 app.use('/auth', authRoute);
 app.use('/user', userRoute);
+app.use('/products', productRoute);
 
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server Running at port ${PORT}`));
