@@ -76,7 +76,7 @@ exports.updateOrder = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
     try {
-        let orders = await modelOrder.getAllOrders();
+        let orders = await modelOrder.getAllOrdersWithProducts();
         orders = orders.map(order => {
             if (statuses[order.status]) {
                 order.status = {

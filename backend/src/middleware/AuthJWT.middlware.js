@@ -5,7 +5,7 @@ const modelUser = require('../model/User.model');
 const JWT_SECRET = process.env.JWT_SECRET_BACKEND;
 
 async function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'] ?? null;
+    const token = req.headers['authorization'].split('Bearer ')[1] ?? null;
 
     if (token == null) {
         return httpResponses.sendError(res, 401, 'Unauthorized'); // Unauthorized

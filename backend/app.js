@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express           = require('express');
 const authRoute         = require('./src/route/Auth.route');
 const userRoute         = require('./src/route/User.route');
@@ -5,8 +6,10 @@ const productRoute      = require('./src/route/Product.route');
 const orderRoute        = require('./src/route/Order.route');
 const { authenticateToken } = require('./src/middleware/AuthJWT.middlware');
 const app               = express();
+const cors              = require('cors');
 
 app.use(express.json());
+app.use(cors());
 app.disable('x-powered-by');
 
 app.get("/", (req, res) => {
