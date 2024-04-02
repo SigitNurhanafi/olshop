@@ -24,6 +24,7 @@ const Navbar = () => {
             <>
               <Link to="/home" className="text-white mr-4">Home</Link>
               <Link to="/profile" className="text-white mr-4">Profile</Link>
+              <Link to="/product" className="text-white mr-4">Profile</Link>
               <button onClick={handleLogout} className="text-white">Logout</button>
             </>
           ) : (
