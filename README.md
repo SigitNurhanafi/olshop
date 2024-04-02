@@ -34,7 +34,7 @@ and front end is http://localhost:5173/
         "fullname": "User Man",
         "password": "123456"
     }'
-```
+    ```
 - logout
     ```
     curl --location --request POST 'http://127.0.0.1:3000/auth/logout' \
@@ -66,12 +66,12 @@ and front end is http://localhost:5173/
         "sku": "889",
         "category": "digital"
     }
-```
+    ```
 - get list
     ```
     curl --location 'http://127.0.0.1:3000/products'
     ```
 - delete 
-  ```
-  curl --location --request DELETE 'http://127.0.0.1:3000/products/1'
-  ```
+    ```
+    curl --location --request DELETE 'http://127.0.0.1:3000/products/1'
+    ```
