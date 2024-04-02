@@ -45,6 +45,7 @@ exports.getOrderById = async (req, res) => {
         }
         
         foundOrder.status = {
+            value: foundOrder.status,
             label: statuses[foundOrder.status]
         }
 

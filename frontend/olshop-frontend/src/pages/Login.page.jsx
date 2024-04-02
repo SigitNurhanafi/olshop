@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import useStore from '../utils/useStore';
 import { Redirect } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button } from "../components/ui/button"
@@ -13,10 +12,10 @@ import {
 } from "../components/ui/card"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
+import { useAuthStore } from '../utils/storeZustand';
 
 const Login = () => {
-
-  const { setToken } = useStore();
+  const { login } = useAuthStore();
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [redirect, setRedirect] = useState(false);
 
@@ -39,15 +38,13 @@ const Login = () => {
       const responseData = await response.json();
       const { token } = responseData.accesToken;
 
-      console.log(token);
-
-      // Simpan token ke dalam Zustand
-      setToken(token);
+      login();
+      localStorage.setItem('token', token);
       setRedirect(true);
 
     } catch (error) {
       console.error('Error:', error);
-      // Tangani kesalahan
+      alert(error);
     }
   };
 
